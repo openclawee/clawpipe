@@ -1,0 +1,4 @@
+# name	user_id	persona_file	color
+architect	cp.clawpipe.dev.architect.p9af31c2b	./personas/architect.md	cyan
+skeptic	cp.clawpipe.dev.skeptic.p12bd8aa1	./personas/skeptic.md	yellow
+builder	cp.clawpipe.dev.builder.p66e0b71d	./personas/builder.md	green
