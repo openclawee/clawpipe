@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  clawpipe chat [options]
+
+Commands:
+  chat    Run multi-agent group chat orchestration
+EOF
+}
+
+main() {
+  local command="${1:-}"
+  if [[ -z "$command" ]]; then
+    usage
+    exit 1
+  fi
+  shift
+
+  case "$command" in
+    chat)
+      # shellcheck disable=SC1091
+      source "$ROOT_DIR/scripts/commands/chat.sh"
+      clawpipe_chat "$ROOT_DIR" "$@"
+      ;;
+    -h|--help|help)
+      usage
+      ;;
+    *)
+      echo "Unknown command: $command" >&2
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"
