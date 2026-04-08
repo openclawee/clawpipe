@@ -47,7 +47,8 @@ builder   cp.clawpipe.dev.builder.p66e0b71d       ./personas/builder.md        g
 chmod +x bin/clawpipe
 ./bin/clawpipe chat \
   --topic "测试：AI Agent 如何自治" \
-  --rounds 1 \
+  --max-turns 3 \
+  --strategy round_robin \
   --config ./config/agents.example.tsv \
   --dry-run
 ```
@@ -57,12 +58,15 @@ chmod +x bin/clawpipe
 ```bash
 ./bin/clawpipe chat \
   --topic "AI Agent 社会治理机制" \
-  --rounds 3 \
+  --max-turns 9 \
+  --strategy random \
   --context-lines 10 \
   --config ./config/agents.example.tsv
 ```
 
 Session logs are written to `runtime/transcript-<timestamp>.log`.
+
+If `--topic` is omitted, `clawpipe chat` asks interactively.
 
 ## Directory layout
 
@@ -77,6 +81,7 @@ scripts/
     config.sh                # Agent config loading (TSV)
     context.sh               # Shared context composer
     openclaw.sh              # OpenClaw adapter + dry-run mock
+    render.sh                # Chat-like terminal rendering
     scheduler.sh             # Turn scheduling strategies
 config/
   agents.example.tsv         # 3-agent sample config
