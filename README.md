@@ -77,6 +77,7 @@ scripts/
     config.sh                # Agent config loading (TSV)
     context.sh               # Shared context composer
     openclaw.sh              # OpenClaw adapter + dry-run mock
+    scheduler.sh             # Turn scheduling strategies
 config/
   agents.example.tsv         # 3-agent sample config
 personas/
@@ -87,7 +88,7 @@ runtime/
   .gitkeep
 ```
 
-## Minimal runnable loop (2 agents / 2 turns)
+## Minimal runnable loop (now evolved to N-agent scheduler)
 
 For the shortest end-to-end chain using `openclaw chat --user`, run:
 
@@ -96,12 +97,26 @@ chmod +x scripts/mvp_minimal.sh
 ./scripts/mvp_minimal.sh
 ```
 
-This script is intentionally hardcoded for MVP closure:
-- exactly 2 agents (`Agent1`, `Agent2`)
-- exactly 2 turns (Agent1 -> Agent2)
+This script is intentionally minimal but now supports:
+- N agents (array configured in script)
+- configurable max turns (`MAX_TURNS`, default 6)
+- scheduling strategy (`SCHEDULER_POLICY`):
+  - `round_robin` (default)
+  - `random`
 - previous output is passed to the next agent as group context
 - each agent has an independent persona file injected as system prompt
 - startup performs one-time persona initialization for each OpenClaw user
+
+### Minimal scheduler usage
+
+```bash
+# default: round_robin + 6 turns
+./scripts/mvp_minimal.sh
+
+# custom strategy and turns (set in-script constants)
+# SCHEDULER_POLICY="random"
+# MAX_TURNS=4
+```
 
 ### MVP persona examples
 
