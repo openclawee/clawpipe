@@ -100,3 +100,10 @@ This script is intentionally hardcoded for MVP closure:
 - exactly 2 agents (`Agent1`, `Agent2`)
 - exactly 2 turns (Agent1 -> Agent2)
 - previous output is passed to the next agent as group context
+- each agent has an independent persona file injected as system prompt
+- startup performs one-time persona initialization for each OpenClaw user
+
+### MVP persona examples
+
+- `personas/mvp_agent1.md` (结构化、理性、架构师风格)
+- `personas/mvp_agent2.md` (挑刺、反驳、质疑者风格)

@@ -17,19 +17,41 @@ TOTAL_TURNS=2
 
 AGENT_NAMES=("Agent1" "Agent2")
 AGENT_USERS=("cp.clawpipe.mvp.agent1" "cp.clawpipe.mvp.agent2")
-AGENT_SYSTEMS=(
-  "你是 Agent1。风格简洁，先给观点，再给一个理由。"
-  "你是 Agent2。你需要回应上一位并补充一个不同角度。"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+AGENT_PERSONA_FILES=(
+  "$ROOT_DIR/personas/mvp_agent1.md"
+  "$ROOT_DIR/personas/mvp_agent2.md"
 )
+
+for persona_file in "${AGENT_PERSONA_FILES[@]}"; do
+  if [[ ! -f "$persona_file" ]]; then
+    echo "[ERROR] persona file not found: $persona_file" >&2
+    exit 1
+  fi
+done
 
 # Shared chat context (minimal): pass latest message to next agent.
 last_message="Host: 讨论主题是：${TOPIC}"
+
+# Init step: inject each agent persona into its own OpenClaw user memory.
+for i in "${!AGENT_NAMES[@]}"; do
+  init_name="${AGENT_NAMES[$i]}"
+  init_user="${AGENT_USERS[$i]}"
+  init_system="$(<"${AGENT_PERSONA_FILES[$i]}")"
+
+  openclaw chat \
+    --user "$init_user" \
+    --system "$init_system" \
+    --message "初始化角色。请仅回复：INIT_OK" >/dev/null
+
+  echo "[INIT] ${init_name} persona injected -> ${init_user}"
+done
 
 for ((turn=0; turn<TOTAL_TURNS; turn++)); do
   idx=$((turn % 2))
   name="${AGENT_NAMES[$idx]}"
   user_id="${AGENT_USERS[$idx]}"
-  system_prompt="${AGENT_SYSTEMS[$idx]}"
+  system_prompt="$(<"${AGENT_PERSONA_FILES[$idx]}")"
 
   prompt=$(cat <<EOF
 主题：${TOPIC}
