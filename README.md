@@ -86,3 +86,17 @@ personas/
 runtime/
   .gitkeep
 ```
+
+## Minimal runnable loop (2 agents / 2 turns)
+
+For the shortest end-to-end chain using `openclaw chat --user`, run:
+
+```bash
+chmod +x scripts/mvp_minimal.sh
+./scripts/mvp_minimal.sh
+```
+
+This script is intentionally hardcoded for MVP closure:
+- exactly 2 agents (`Agent1`, `Agent2`)
+- exactly 2 turns (Agent1 -> Agent2)
+- previous output is passed to the next agent as group context
